@@ -72,7 +72,7 @@ class AutoAddFromMagento
 
     /**
      * Featch Null Data To Magento
-     * @param LoggerInterface $logger
+     * @param LoggerInterface $this->logger
      * @param ProductRepository $productRepository
      * @param \Magento\Catalog\Model\ResourceModel\Product\CollectionFactory $collectionFactory
      * @param StoreManagerInterface $storeManagerInterface
@@ -119,10 +119,7 @@ class AutoAddFromMagento
      */
     public function execute()
     {
-        $writer = new \Zend_Log_Writer_Stream(BP . '/var/log/AutoAddFromMagento.log');
-        $logger = new \Zend_Log();
-        $logger->addWriter($writer);
-        $logger->info("Auto Add Image Value");
+        $this->logger->info("Auto Add Image Value");
         $enable = $this->datahelper->getAutoCronEnable();
         if (!$enable) {
             return false;
@@ -158,7 +155,7 @@ class AutoAddFromMagento
         foreach ($product_collection->getData() as $product) {
             $productSku_array[] = $product['sku'];
         }
-        //$logger->info("Sku => ". json_encode($productSku_array, true));
+        //$this->logger->info("Sku => ". json_encode($productSku_array, true));
         if (count($productSku_array) > 0) {
             foreach ($productSku_array as $sku) {
                 if ($sku != "") {
@@ -233,7 +230,7 @@ class AutoAddFromMagento
                 $storeId
             );
         }
-        $logger->info("Bynder Auto Replace Attribute Null");
+        $this->logger->info("Bynder Auto Replace Attribute Null");
         return true;
     }
 
@@ -245,10 +242,7 @@ class AutoAddFromMagento
      */
     public function getMetaPropertiesCollection($collection)
     {
-        $writer = new \Zend_Log_Writer_Stream(BP . '/var/log/AutoAddFromMagento.log');
-        $logger = new \Zend_Log();
-        $logger->addWriter($writer);
-        $logger->info("getMetaPropertiesCollection");
+        $this->logger->info("getMetaPropertiesCollection");
         $collection_data_value = [];
         $collection_data_slug_val = [];
         if (count($collection) >= 1) {
@@ -380,10 +374,7 @@ class AutoAddFromMagento
      */
     public function getDataItem($convert_array, $collection_data_slug_val, $current_sku)
     {
-        $writer = new \Zend_Log_Writer_Stream(BP . '/var/log/AutoAddFromMagento.log');
-        $logger = new \Zend_Log();
-        $logger->addWriter($writer);
-        $logger->info("getDataItem");
+        $this->logger->info("getDataItem");
         $data_arr = [];
         $data_val_arr = [];
         if ($convert_array['status'] == 1) {
@@ -401,7 +392,7 @@ class AutoAddFromMagento
                 $new_magento_role_list = [];
                 $new_bynder_alt_text =[];
                 $new_bynder_mediaid_text = [];
-                $new_image_role = [];
+                $new_image_role = []; // initialized here for use in video/doc branches below
                 if (count($bynder_image_role) > 0) {
                     foreach ($bynder_image_role as $m_bynder_role) {
                         if (!empty($m_bynder_role)) {
@@ -497,7 +488,7 @@ class AutoAddFromMagento
                         "type" => "image",
 						'is_order' => $is_order
                     ];
-                    $logger->info("data_p => ". json_encode($data_p, true));
+                    $this->logger->info("data_p => ". json_encode($data_p, true));
                     array_push($data_val_arr, $data_p);
                 } else {
                     if ($data_value['type'] == 'video') {
@@ -523,7 +514,7 @@ class AutoAddFromMagento
                             "type" => "video",
 							'is_order' => $is_order
                         ];
-                        $logger->info("data_p => ". json_encode($data_p, true));
+                        $this->logger->info("data_p => ". json_encode($data_p, true));
                         array_push($data_val_arr, $data_p);
 
                     } else {
@@ -568,15 +559,14 @@ class AutoAddFromMagento
      */
     public function getProcessItem($data_arr, $data_val_arr)
     {
-        $writer = new \Zend_Log_Writer_Stream(BP . '/var/log/AutoAddFromMagento.log');
-        $logger = new \Zend_Log();
-        $logger->addWriter($writer);
-        $logger->info("getProcessItem");
+        $this->logger->info("getProcessItem");
 
         $image_value_details_role = [];
         $temp_arr = [];
 		$byn_is_order = [];
 		$types = [];
+		$image_alt_text = [];
+		$byn_md_id_new = [];
         foreach ($data_arr as $key => $skus) {
             $temp_arr[$skus][] =  implode("", $data_val_arr[$key]["url"]);
             $image_value_details_role[$skus][] = $data_val_arr[$key]["magento_image_role"];
@@ -616,11 +606,7 @@ class AutoAddFromMagento
      */
     public function getUpdateImage($img_json, $product_sku_key, $mg_img_role_option, $img_alt_text, $bynder_media_id, $type, $byd_media_is_order)
     {
-
-        $writer = new \Zend_Log_Writer_Stream(BP . '/var/log/AutoAddFromMagento.log');
-        $logger = new \Zend_Log();
-        $logger->addWriter($writer);
-        $logger->info("getUpdateImage");
+        $this->logger->info("getUpdateImage");
         $diff_image_detail = [];
         $new_image_detail = [];
         $diff_video_detail = [];
@@ -658,7 +644,7 @@ class AutoAddFromMagento
                             }
                         }
                     }
-                    $logger->info("all_item_url => ". json_encode($all_item_url));
+                    $this->logger->info("all_item_url => ". json_encode($all_item_url));
                     foreach ($new_image_array as $vv => $new_image_value) {
                         if (trim($new_image_value) != "" && $new_image_value != "no image") {
                             $item_url = explode("?", $new_image_value);
@@ -676,7 +662,7 @@ class AutoAddFromMagento
                             $find_video = strpos($new_image_value, "@@");
 							$find_doc = strpos($new_image_value, "??");
                             if (!$find_video && !$find_doc) {
-                                $logger->info("image_detail => ". $new_image_value);
+                                $this->logger->info("image_detail => ". $new_image_value);
 								$is_order = isset($isOrder[$vv]) ? $isOrder[$vv] : "";
                                 $image_detail[] = [
                                     "item_url" => $new_image_value,
@@ -703,7 +689,7 @@ class AutoAddFromMagento
                                     }
                                 }
                                 if (!in_array($item_url[0], $all_item_url)) {
-                                    $logger->info("diff_image_detail => ". $new_image_value);
+                                    $this->logger->info("diff_image_detail => ". $new_image_value);
 									$is_order = isset($isOrder[$vv]) ? $isOrder[$vv] : "";
                                     $diff_image_detail[] = [
                                         "item_url" => $new_image_value,
@@ -755,7 +741,7 @@ class AutoAddFromMagento
                                 $item_url = explode("@@", $new_image_value);
                                 $thum_url = explode("@@", $new_image_value);
                                 $media_video_explode = explode("/", $item_url[0]);
-                                $logger->info("video_detail => ". $item_url[0]);
+                                $this->logger->info("video_detail => ". $item_url[0]);
 								$is_order = isset($isOrder[$vv]) ? $isOrder[$vv] : "";
                                 $video_detail[] = [
                                     "item_url" => $item_url[0],
@@ -766,7 +752,7 @@ class AutoAddFromMagento
 									"is_order" => $is_order
                                 ];
                                 if (!in_array($item_url[0], $all_video_url)) {
-                                    $logger->info("diff_video_detail => ". $item_url[0]);
+                                    $this->logger->info("diff_video_detail => ". $item_url[0]);
 									$is_order = isset($isOrder[$vv]) ? $isOrder[$vv] : "";
                                     $diff_video_detail[] = [
                                         "item_url" => $item_url[0],
@@ -895,13 +881,13 @@ class AutoAddFromMagento
                             }
                         }
                     }
-                    $logger->info("diff_image_detail => ". json_encode($diff_image_detail));
-                    $logger->info("new_image_detail => ". json_encode($new_image_detail));
+                    $this->logger->info("diff_image_detail => ". json_encode($diff_image_detail));
+                    $this->logger->info("new_image_detail => ". json_encode($new_image_detail));
                     $merge_img_video = array_merge($new_image_detail, $new_video_detail);
                     $merge_diff_img_video = array_merge($diff_video_detail, $diff_image_detail);
                     //$array_merge = array_merge($merge_img_video, $merge_diff_img_video);
                     $array_merge = array_merge($image_detail,  $video_detail);
-                    $logger->info("array_merge => ". json_encode($array_merge));
+                    $this->logger->info("array_merge => ". json_encode($array_merge));
                     $m_id = [];
                     $types = [];
                     foreach ($array_merge as $img) {
@@ -987,7 +973,7 @@ class AutoAddFromMagento
             }
             
         } catch (Exception $e) {
-            $logger->info("Sku => ". $product_sku_key ."error => ". $e->getMessage());
+            $this->logger->info("Sku => ". $product_sku_key ."error => ". $e->getMessage());
         }
     }
 }

@@ -49,9 +49,9 @@ class Editor extends \Magento\Framework\Data\Form\Element\Editor
         Factory $factoryElement,
         CollectionFactory $factoryCollection,
         Escaper $escaper,
-        \Magento\Framework\Serialize\Serializer\Json $serializer = null,
         StoreManagerInterface $storeManager,
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
+        ?\Magento\Framework\Serialize\Serializer\Json $serializer = null,
         $data = []
     ) {
         parent::__construct($factoryElement, $factoryCollection, $escaper, $data);

@@ -52,7 +52,8 @@ class Data extends AbstractHelper
      */
     protected $_bulk;
     /**
-     * @var $_registry
+     * @var \Magento\Framework\Registry
+     * @deprecated Use product repository instead
      */
     protected $_registry;
     /**
@@ -231,7 +232,7 @@ class Data extends AbstractHelper
      */
     public function getBynderDom()
     {
-        return (string) $this->getConfig(self::BYNDER_DOMAIN);
+        return (string) $this->getStoreConfig(self::BYNDER_DOMAIN);
     }
     /**
      * Get Iframe Url
@@ -249,7 +250,7 @@ class Data extends AbstractHelper
      */
     public function getFetchCronEnable()
     {
-        return $this->getConfig(self::FETCH_CRON);
+        return $this->getStoreConfig(self::FETCH_CRON);
     }
     /**
      * Get Auto cron enable
@@ -258,7 +259,7 @@ class Data extends AbstractHelper
      */
     public function getAutoCronEnable()
     {
-        return $this->getConfig(self::AUTO_CRON);
+        return $this->getStoreConfig(self::AUTO_CRON);
     }
     /**
      * Get Auto cron enable
@@ -267,7 +268,7 @@ class Data extends AbstractHelper
      */
     public function getDeleteCronEnable()
     {
-        return $this->getConfig(self::DELETE_CRON);
+        return $this->getStoreConfig(self::DELETE_CRON);
     }
     /**
      * Get Permanen Token
@@ -276,7 +277,7 @@ class Data extends AbstractHelper
      */
     public function getPermanenToken()
     {
-        return (string) $this->getConfig(self::PERMANENT_TOKEN);
+        return (string) $this->getStoreConfig(self::PERMANENT_TOKEN);
     }
     /**
      * Get Load Credential

@@ -29,6 +29,11 @@ class Getsku extends \Magento\Backend\App\Action
      *
      */
     protected $datahelper;
+    /**
+     * @var Attribute.
+     *
+     */
+    protected $attribute;
 
     /**
      * Get Sku.

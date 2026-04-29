@@ -50,8 +50,9 @@ class ImageFactoryPlugin
         \Closure $proceed,
         Product $product,
         string $imageId,
-        array $attributes = null
+        ?array $attributes = null
     ) {
+        $attributes = $attributes ?? [];
         $productDetails = $this->productRepository->getById($product->getId());
         $useBynderCdn = $productDetails->getData('use_bynder_cdn');
         $bynderImages = $productDetails->getData('bynder_multi_img');

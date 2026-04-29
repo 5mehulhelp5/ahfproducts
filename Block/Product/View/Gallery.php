@@ -78,9 +78,9 @@ class Gallery extends \Magento\Catalog\Block\Product\View\Gallery
         ArrayUtils $arrayUtils,
         \Magento\Framework\Json\EncoderInterface $jsonEncoder,
         \Magento\Framework\Registry $Registry,
-        ImagesConfigFactoryInterface $imagesConfigFactory = null,
+        ?ImagesConfigFactoryInterface $imagesConfigFactory = null,
         array $galleryImagesConfig = [],
-        UrlBuilder $urlBuilder = null,
+        ?UrlBuilder $urlBuilder = null,
         array $data = []
     ) {
         parent::__construct(
@@ -159,14 +159,19 @@ class Gallery extends \Magento\Catalog\Block\Product\View\Gallery
 
         $use_bynder_cdn = $product->getData('use_bynder_cdn');
         $use_bynder_both_image = $product->getData('use_bynder_both_image');
+        $imagesItems = [];
         if ($use_bynder_both_image == 1) { /*Both Image*/
             
             if (!empty($product->getData('bynder_multi_img'))) {
                 $bynder_image = $product->getData('bynder_multi_img');
                 $json_value = json_decode($bynder_image, true);
-                usort($json_value, function ($a, $b) {
-                    return $a['is_order'] <=> $b['is_order'];
-                });
+                if (is_array($json_value) && !empty($json_value)) {
+                    usort($json_value, function ($a, $b) {
+                        return $a['is_order'] <=> $b['is_order'];
+                    });
+                } else {
+                    $json_value = [];
+                }
                 $role_image = 0;
                 foreach ($json_value as $key => $values) {
                     $image_values =  trim($values['thum_url']);
@@ -215,9 +220,13 @@ class Gallery extends \Magento\Catalog\Block\Product\View\Gallery
             if (!empty($product->getData('bynder_multi_img'))) {
                 $bynder_image = $product->getData('bynder_multi_img');
                 $json_value = json_decode($bynder_image, true);
-				usort($json_value, function ($a, $b) {
-                    return $a['is_order'] <=> $b['is_order'];
-                });
+                if (is_array($json_value) && !empty($json_value)) {
+                    usort($json_value, function ($a, $b) {
+                        return $a['is_order'] <=> $b['is_order'];
+                    });
+                } else {
+                    $json_value = [];
+                }
                 $role_image = 0;
                 foreach ($json_value as $key => $values) {
                     $image_values =  trim($values['thum_url']);
