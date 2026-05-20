@@ -64,74 +64,97 @@ if (count($get_metaData) > 0) {
     <div class="main_container dear-stock-sec">
         <div class="main_header_master admin__data-grid-wrap">
             <div class="main_container_masterdata admin__data-grid-wrap product-imp-sec">
-                <label> <strong>The Meta Property Configration For the SKU:-</strong> </label> <br><br>
-                <div class="form-check form-check-inline" style="float: left;width: 100%;">
-
-                    <label class="form-check-label">
+                <!-- SKU -->
+                <div style="margin-bottom: 20px;">
+                    <label><strong>The Meta Property Configuration For the SKU:-</strong></label>
+                    <div style="margin-top: 10px;">
                         <input type="hidden" name="system_slug[]" value="sku" />
-                        <label> <strong>Property List:-</strong> </label> <br><br>
+                        <label><strong>Property List:-</strong></label>
+                        <br><br>
                         <select class="selectbox_item" id="bynder_property" name="select_meta_tag[]">
                             <option value="0">Select The option</option>
                             <?= $sku_properites; ?>
                         </select>
-                    </label>
-
+                    </div>
                 </div>
-                <hr>
-                <label> <strong> The Meta Property Configration For the Image Role :-</strong> </label> <br><br>
-                <div class="form-check form-check-inline" style="float: left;width: 100%;">
 
-                    <label class="form-check-label">
-                        <label> <strong>Property List:-</strong> </label> <br><br>
+                <hr>
+
+                <!-- IMAGE ROLE -->
+                <div style="margin-bottom: 20px;">
+                    <label><strong>The Meta Property Configuration For the Image Role :-</strong></label>
+                    <div style="margin-top: 10px;">
                         <input type="hidden" name="system_slug[]" value="image_role" />
+                        <label><strong>Property List:-</strong></label>
+                        <br><br>
                         <select class="selectbox_item" id="bynder_property_image_role" name="select_meta_tag[]">
                             <option value="0">Select The option</option>
                             <?= $image_role_properites; ?>
                         </select>
-                    </label>
+                    </div>
                 </div>
+
                 <hr>
-                <label> <strong> The Meta Property Configration For the Alt Text :-</strong> </label> <br><br>
-                <div class="form-check form-check-inline" style="float: left;width: 100%;">
-                    <label class="form-check-label">
-                        <label> <strong>Property List:-</strong> </label> <br><br>
+
+                <!-- ALT TEXT -->
+                <div style="margin-bottom: 20px;">
+                    <label><strong>The Meta Property Configuration For the Alt Text :-</strong></label>
+                    <div style="margin-top: 10px;">
                         <input type="hidden" name="system_slug[]" value="alt_text" />
+                        <label><strong>Property List:-</strong></label>
+                        <br><br>
                         <select class="selectbox_item" id="bynder_property_alt_tax" name="select_meta_tag[]">
                             <option value="0">Select The option</option>
                             <?= $alt_properites; ?>
                         </select>
-                    </label> 
+                    </div>
                 </div>
-				<hr>
-                <label> <strong> The Meta Property Configration For the Media Order :-</strong> </label> <br><br>
-                <div class="form-check form-check-inline" style="float: left;width: 100%;">
-                    <label class="form-check-label">
-                        <label> <strong>Property List:-</strong> </label> <br><br>
+
+                <hr>
+
+                <!-- MEDIA ORDER -->
+                <div style="margin-bottom: 20px;">
+                    <label><strong>The Meta Property Configuration For the Media Order :-</strong></label>
+                    <div style="margin-top: 10px;">
                         <input type="hidden" name="system_slug[]" value="image_order" />
+                        <label><strong>Property List:-</strong></label>
+                        <br><br>
                         <select class="selectbox_item" id="bynder_property_media_order" name="select_meta_tag[]">
                             <option value="0">Select The option</option>
                             <?= $is_order ?>
                         </select>
-                    </label> 
+                    </div>
                 </div>
+
                 <hr>
-                <label> <strong> The Meta Property Configration For the SubType :-</strong> </label> <br><br>
-                <div class="form-check form-check-inline" style="float: left;width: 100%;">
-                    <label class="form-check-label">
-                        <label> <strong>Property List:-</strong> </label> <br><br>
+
+                <!-- SUB TYPE -->
+                <div style="margin-bottom: 20px;">
+                    <label><strong>The Meta Property Configuration For the SubType :-</strong></label>
+                    <div style="margin-top: 10px;">
                         <input type="hidden" name="system_slug[]" value="sub_type" />
+                        <label><strong>Property List:-</strong></label>
+                        <br><br>
                         <select class="selectbox_item" id="bynder_property_sub_type" name="select_meta_tag[]">
                             <option value="0">Select The option</option>
                             <?= $is_sub_type ?>
                         </select>
-                    </label>
-                    <button type="submit" class="action- scalable primary" name="submit" id="btn_submit"
-                        style="margin-top: 30px; border-radius: 4px; width: 247px;  margin-left: auto; display: block;">
+                    </div>
+                </div>
+
+                <!-- SAVE BUTTON -->
+                <div style="text-align: right; margin-top: 30px;">
+                    <button type="submit"
+                            class="action- scalable primary"
+                            name="submit"
+                            id="btn_submit"
+                            style="border-radius: 4px; width: 247px;">
                         <span>
                             <?= $block->escapeHtml('Save Metaproperties'); ?>
                         </span>
                     </button>
                 </div>
+
             </div>
         </div>
     </div>
