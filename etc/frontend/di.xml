@@ -5,6 +5,7 @@
     <preference for="Magento\Swatches\Block\Product\Renderer\Configurable" type="DamConsultants\Ahfproducts\Block\Product\Renderer\Configurable" />
     <preference for="Magento\Swatches\Block\Product\Renderer\Listing\Configurable" type="DamConsultants\Ahfproducts\Block\Product\Renderer\Listing\Configurable" />
     <preference for="Magento\Swatches\Helper\Data" type="DamConsultants\Ahfproducts\Helper\SwatchData" />
+    <preference for="Magento\Checkout\Model\Cart\ImageProvider" type="DamConsultants\Ahfproducts\Model\ImageProvider"/>
     <type name="Magento\Checkout\CustomerData\AbstractItem">
         <plugin name="Change_Product_Image_In_Minicart" type="DamConsultants\Ahfproducts\Plugin\Minicart\Image" sortOrder="1"/>
     </type>
