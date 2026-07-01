@@ -4,6 +4,8 @@ namespace DamConsultants\Ahfproducts\Helper;
 
 use \Magento\Framework\App\Helper\AbstractHelper;
 use Magento\Store\Model\ScopeInterface;
+use Bounteous\SkuAlias\Model\ResourceModel\Alias\CollectionFactory as AliasCollectionFactory;
+use Bounteous\SkuAlias\Api\AliasRepositoryInterface;
 
 class Data extends AbstractHelper
 {
@@ -60,6 +62,8 @@ class Data extends AbstractHelper
      * @var $permanent_token
      */
     public $permanent_token = "";
+    private AliasCollectionFactory $aliasCollectionFactory;
+    private AliasRepositoryInterface $aliasRepository;
 
     public const BYNDER_DOMAIN = 'bynderconfig/bynder_credential/bynderdomain';
     public const PERMANENT_TOKEN = 'bynderconfig/bynder_credential/permanent_token';
@@ -86,6 +90,8 @@ class Data extends AbstractHelper
      * @param \Magento\Store\Model\StoreManagerInterface $storeManager
      * @param \Magento\Framework\Registry $registry
      * @param \Magento\ConfigurableProduct\Block\Adminhtml\Product\Steps\Bulk $bulk
+     * @param AliasCollectionFactory $aliasCollectionFactory
+     * @param AliasRepositoryInterface $aliasRepository
      */
     public function __construct(
         \Magento\Framework\Stdlib\Cookie\CookieMetadataFactory $cookieMetadataFactory,
@@ -97,7 +103,9 @@ class Data extends AbstractHelper
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
         \Magento\Store\Model\StoreManagerInterface $storeManager,
         \Magento\Framework\Registry $registry,
-        \Magento\ConfigurableProduct\Block\Adminhtml\Product\Steps\Bulk $bulk
+        \Magento\ConfigurableProduct\Block\Adminhtml\Product\Steps\Bulk $bulk,
+        AliasCollectionFactory $aliasCollectionFactory,
+        AliasRepositoryInterface $aliasRepository
     ) {
         $this->cookieMetadataFactory = $cookieMetadataFactory;
         $this->cookieManager = $cookieManager;
@@ -108,6 +116,8 @@ class Data extends AbstractHelper
         $this->_curl = $curl;
         $this->_bulk = $bulk;
         $this->_registry = $registry;
+        $this->aliasCollectionFactory = $aliasCollectionFactory;
+        $this->aliasRepository = $aliasRepository;
         parent::__construct($context);
     }
     /**
@@ -901,4 +911,35 @@ class Data extends AbstractHelper
         $response = '{"status":1,"data":[{"id":"90261277-77FC-4DEB-8C5021715E9A1D38"},{"id":"D88487A1-C6E9-4202-B362AEEA91CDB0D1"}]}';
         return $response;*/
     }
+    /**
+     * Alias Sku
+     *
+     * @param string $bd_sku
+     * @return $this
+     */
+    public function getSkuByAlias($bd_sku) 
+    {
+        /*$aliascollection = $this->aliasCollectionFactory->create();
+        $aliascollection->addFieldToFilter('sku', $bd_sku);
+        $aliascollection->setPageSize(1);
+        $aliasSku = $aliascollection->getFirstItem()->getAliasSku();
+        return $aliasSku;*/
+        $alias = $this->aliasRepository->resolveForIndex($bd_sku)->getAliasSku();
+        return $alias;
+    }
+    /**
+     * Alias Sku
+     *
+     * @param string $bd_sku
+     * @return $this
+     */
+    public function getAliasBySku($alias_sku) 
+    {
+        $aliascollection = $this->aliasCollectionFactory->create();
+        $aliascollection->addFieldToFilter('alias_sku', $alias_sku);
+        $aliascollection->setPageSize(1);
+        $sku = $aliascollection->getFirstItem()->getSku();
+        return $sku;
+    }
+
 }

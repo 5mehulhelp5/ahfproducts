@@ -6,7 +6,7 @@ use DamConsultants\Ahfproducts\Model\ResourceModel\Collection\MetaPropertyCollec
 use DamConsultants\Ahfproducts\Model\ResourceModel\Collection\BynderMediaTableCollectionFactory;
 use Bounteous\SkuAlias\Model\ResourceModel\Alias\CollectionFactory as AliasCollectionFactory;
 
-class Psku extends \Magento\Backend\App\Action
+class Alissku extends \Magento\Backend\App\Action
 {
     /**
      * @var \Magento\Framework\View\Result\PageFactory
@@ -149,9 +149,20 @@ class Psku extends \Magento\Backend\App\Action
         if (strlen($product_sku) > 0) {
             $productSku = explode(",", trim($product_sku));
             if (count($productSku) > 0) {
-                foreach ($productSku as $sku) {
-                    if ($sku != "") {
+                foreach ($productSku as $alias_sku) {
+                    if ($alias_sku != "") {
                         try {
+                            $sku = $this->datahelper->getAliasBySku($alias_sku);
+                            if($sku == NULL) {
+                                $insert_data = [
+                                    "sku" => $alias_sku,
+                                    "message" => "Alias SKU not found in Alias Data",
+                                    "data_type" => "",
+                                    "lable" => "0"
+                                ];
+                                $this->getInsertDataTable($insert_data);
+                                continue;
+                            }
                             $product_id = $this->product->getIdBySku($sku);
                             if (!$product_id) {
                                 $insert_data = [
@@ -173,18 +184,7 @@ class Psku extends \Magento\Backend\App\Action
                             $this->getInsertDataTable($insert_data);
                             continue;
                         }
-                        $aliasSku = $this->datahelper->getSkuByAlias($sku);
-                        if ($aliasSku === null || empty($aliasSku)) {
-                            $insert_data = [
-                                "sku" => $sku,
-                                "message" => "Alias SKU is empty.",
-                                "data_type" => "",
-                                "lable" => "0"
-                            ];
-                            $this->getInsertDataTable($insert_data);
-                            continue;
-                        }
-                        $bd_sku = trim(preg_replace('/[^A-Za-z0-9-]/', '_', $aliasSku));
+                        $bd_sku = trim(preg_replace('/[^A-Za-z0-9-]/', '_', $alias_sku));
                         $get_data = $this->datahelper->getImageSyncWithProperties($bd_sku, $property_id, $collection_value);
                         $getIsJson = $this->getIsJSON($get_data);
 						

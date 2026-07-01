@@ -150,7 +150,18 @@ class UpdateAllSku
 					$this->getInsertDataTable($insert_data);
 					continue;
 				}
-				$bd_sku = trim(preg_replace('/[^A-Za-z0-9-]/', '_', $sku));
+                $aliasSku = $this->datahelper->getSkuByAlias($sku);
+                if ($aliasSku === null || empty($aliasSku)) {
+                    $insert_data = [
+                        "sku" => $sku,
+                        "message" => "Alias SKU is empty.",
+                        "data_type" => "",
+                        "lable" => "0"
+                    ];
+                    $this->getInsertDataTable($insert_data);
+                    continue;
+                }
+                $bd_sku = trim(preg_replace('/[^A-Za-z0-9-]/', '_', $aliasSku));
 				$storeIds = $this->storeManagerInterface->getStore()->getId();
 				$_product = $this->_productRepository->get($sku);
 				$product_ids = $_product->getId();

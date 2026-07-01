@@ -159,7 +159,18 @@ class AutoAddFromMagento
         if (count($productSku_array) > 0) {
             foreach ($productSku_array as $sku) {
                 if ($sku != "") {
-                    $bd_sku = trim(preg_replace('/[^A-Za-z0-9-]/', '_', $sku));
+                    $aliasSku = $this->datahelper->getSkuByAlias($sku);
+                    if ($aliasSku === null || empty($aliasSku)) {
+                        $insert_data = [
+                            "sku" => $sku,
+                            "message" => "Alias SKU is empty.",
+                            'media_id' => "",
+                            "data_type" => ""
+                        ];
+                        $this->getInsertDataTable($insert_data);
+                        continue;
+                    }
+                    $bd_sku = trim(preg_replace('/[^A-Za-z0-9-]/', '_', $aliasSku));
                     $get_data = $this->datahelper->getImageSyncWithProperties($bd_sku, $property_id, $collection_value);
                     if (!empty($get_data) && $this->getIsJSON($get_data)) {
                         $respon_array = json_decode($get_data, true);
